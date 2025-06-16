@@ -4,16 +4,8 @@
 
 This repository follows the LLM Zoomcamp from [DataTalksClub](https://github.com/DataTalksClub/llm-zoomcamp) - A Free Course on Real-Life Applications of LLMs.
 
-## ElasticSearch
+## Modules
 
-```bash
-docker run -it \
-    --rm \
-    --name elasticsearch \
-    -m 4GB \
-    -p 9200:9200 \
-    -p 9300:9300 \
-    -e "discovery.type=single-node" \
-    -e "xpack.security.enabled=false" \
-    docker.elastic.co/elasticsearch/elasticsearch:8.17.6
-```
+### [Module 1: Introduction to LLMs and RAG](01-intro/)
+- Basics of LLMs and Retrieval-Augmented Generation (RAG)
+- OpenAI API and text search with Elasticsearch
