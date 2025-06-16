@@ -1,4 +1,8 @@
-# LLM
+# (WIP) LLM Zoomcamp
+
+![logo](/assets/logo.jpg)
+
+This repository follows the LLM Zoomcamp from [DataTalksClub](https://github.com/DataTalksClub/llm-zoomcamp) - A Free Course on Real-Life Applications of LLMs.
 
 ## ElasticSearch
 
