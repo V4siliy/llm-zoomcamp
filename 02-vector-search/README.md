@@ -52,7 +52,50 @@ uv pip install "qdrant-client[fastembed]>=1.14.2"
 ## Step 1: Import Required Libraries & Connect to Qdrant
 ## Step 2: Study the Dataset
 ## Step 3: Choosing the Embedding Model with FastEmbed
+
+FastEmbed is an optimized embedding solution designed specifically for Qdrant. It delivers low-latency, CPU-friendly embedding generation, eliminating the need for heavy frameworks like PyTorch or TensorFlow. It uses quantized model weights and ONNX Runtime, making it significantly faster than traditional Sentence Transformers on CPU while maintaining competitive accuracy.
+
+FastEmbed supports:
+
+- **Dense embeddings** for text and images (the most common type in vector search, ones we're going to use today)
+- **Sparse embeddings** (e.g., BM25 and sparse neural embeddings)
+- **Multivector embeddings** (e.g., ColPali and ColBERT, late interaction models)
+- **Rerankers**
+
+### Model
+
+```python
+model_handle = "jinaai/jina-embeddings-v2-small-en"
+```
+
+Like most dense embedding models, `jina-embedding-small-en` was trained to measure semantic closeness using cosine similarity.
+You can find this information, for example, on the model’s [Hugging Face card](https://huggingface.co/jinaai/jina-embeddings-v2-small-en).
+
+>The parameters of the chosen embedding model, including the output embedding dimensions and the semantic similarity (distance) metric, are required to configure semantic search in Qdrant.
+
 ## Step 4: Create a Collection
+
+When creating a [collection](https://qdrant.tech/documentation/concepts/collections/), we need to specify:
+
+Name: A unique identifier for the collection.
+Vector Configuration:
+Size: The dimensionality of the vectors.
+Distance Metric: The method used to measure similarity between vectors.
+There are additional parameters you can explore in our [documentation](https://qdrant.tech/documentation/concepts/collections/#create-a-collection). Moreover, you can configure other vector types in Qdrant beyond typical dense embeddings (f.e., for hybrid search). However, for this example, the simplest default configuration is sufficient.
+
+```python
+# Define the collection name
+collection_name = "zoomcamp-rag"
+
+# Create the collection with specified vector parameters
+client.create_collection(
+    collection_name=collection_name,
+    vectors_config=models.VectorParams(
+        size=EMBEDDING_DIMENSIONALITY,  # Dimensionality of the vectors
+        distance=models.Distance.COSINE  # Distance metric for similarity search
+    )
+)
+```
 ## Step 5: Create, Embed & Insert Points into the Collection
 
 [Points](https://qdrant.tech/documentation/concepts/points/#points) are the core data entities in Qdrant. Each point consists of:
