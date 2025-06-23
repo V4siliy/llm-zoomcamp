@@ -114,7 +114,7 @@ The Python client offers:
 Parallelization
 Retries
 Lazy batching
-These can be configured via parameters in the upload_collection and upload_points functions.
+These can be configured via parameters in the `upload_collection` and `upload_points` functions.
 For details, check the [documentation](https://qdrant.tech/documentation/concepts/points/#upload-points).
 
 ### Study Data Visually
@@ -138,3 +138,92 @@ To do that, run the following command:
 ## Step 6: Running a Similarity Search
 
 Now, let’s find the most similar text vector in Qdrant to a given query embedding - the most relevant answer to a given question.
+
+### How Similarity Search Works
+
+1. Qdrant compares the query vector to stored vectors (based on a vector index) using the distance metric defined when creating the collection.
+2. The closest matches are returned, ranked by similarity.
+
+> Vector index is built for approximate nearest neighbor (ANN) search, making large-scale vector search feasible.
+
+If you'd like to dive into our choice of vector index for vector search, check our article ["What is a vector database"](https://qdrant.tech/articles/what-is-a-vector-database/), or, for a more technical deep dive, our article on [Filterable Hierarchical Navigable Small World](https://qdrant.tech/articles/filtrable-hnsw/).
+
+Let's define a search function:
+
+```python
+def search(query, limit=1):
+
+    results = client.query_points(
+        collection_name=collection_name,
+        query=models.Document( #embed the query text locally with "jinaai/jina-embeddings-v2-small-en"
+            text=query,
+            model=model_handle 
+        ),
+        limit=limit, # top closest matches
+        with_payload=True #to get metadata in the results
+    )
+
+    return results
+```
+
+Now let’s pick a random question from the course data.
+As you remember, we didn’t upload the questions to Qdrant.
+
+```python
+import random
+
+course = random.choice(documents_raw)
+course_piece = random.choice(course['documents'])
+print(json.dumps(course_piece, indent=2))
+
+result = search(course_piece['question'])
+
+print(f"Question:\n{course_piece['question']}\n")
+print("Top Retrieved Answer:\n{}\n".format(result.points[0].payload['text']))
+print("Original Answer:\n{}".format(course_piece['text']))
+```
+
+## Step 7: Running a Similarity Search with Filters
+We can refine our search using metadata filters.
+
+> Qdrant’s custom vector index implementation, Filterable HNSW, allows for precise and scalable vector search with filtering conditions.
+
+For example, we can search for an answer to a question related to a specific course from the three available in the dataset.
+Using a must filter ensures that all specified conditions are met for a data point to be included in the search results.
+
+> Qdrant also supports other filter types such as `should`, `must_not`, `range`, and more. For a full overview, check our [Filtering Guide](https://qdrant.tech/articles/vector-search-filtering/)
+
+To enable efficient filtering, we need to turn on [indexing of payload fields](https://qdrant.tech/documentation/concepts/indexing/#payload-index).
+
+```python
+client.create_payload_index(
+    collection_name=collection_name,
+    field_name="course",
+    field_schema="keyword" # exact matching on string metadata fields
+)
+
+def search_in_course(query, course="mlops-zoomcamp", limit=1):
+
+    results = client.query_points(
+        collection_name=collection_name,
+        query=models.Document( #embed the query text locally with "jinaai/jina-embeddings-v2-small-en"
+            text=query,
+            model=model_handle
+        ),
+        query_filter=models.Filter( # filter by course name
+            must=[
+                models.FieldCondition(
+                    key="course",
+                    match=models.MatchValue(value=course)
+                )
+            ]
+        ),
+        limit=limit, # top closest matches
+        with_payload=True #to get metadata in the results
+    )
+
+    return results
+
+print(search_in_course("What if I submit homeworks late?", "mlops-zoomcamp").points[0].payload['text'])
+```
+
