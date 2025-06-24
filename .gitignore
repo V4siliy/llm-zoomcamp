@@ -2,3 +2,4 @@
 /.python-version
 
 .idea
+/02-vector-search/data/
