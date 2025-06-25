@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "clip-anytorch>=2.6.0",
     "elasticsearch==8.18.1",
     "matplotlib>=3.10.3",
     "minsearch>=0.0.2",
