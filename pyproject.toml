@@ -6,12 +6,17 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "clip-anytorch>=2.6.0",
+    "cognee>=0.2.0",
+    "dlt[qdrant]>=1.13.0",
+    "duckdb>=1.3.2",
     "elasticsearch==8.18.1",
+    "kuzu>=0.9.0",
     "matplotlib>=3.10.3",
     "minsearch>=0.0.2",
     "notebook>=7.4.3",
     "openai>=1.86.0",
     "python-dotenv>=1.1.0",
+    "qdrant-client[fastembed]>=1.14.3",
     "tiktoken>=0.9.0",
     "torch>=2.7.1",
     "torchvision>=0.22.1",
