@@ -3,3 +3,7 @@
 
 .idea
 /02-vector-search/data/
+
+/dlt/content/
+/dlt/db.qdrant/
+/dlt/zoomcamp_pipeline.duckdb

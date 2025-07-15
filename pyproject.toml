@@ -10,6 +10,7 @@ dependencies = [
     "dlt[qdrant]>=1.13.0",
     "duckdb>=1.3.2",
     "elasticsearch==8.18.1",
+    "fastmcp>=2.9.2",
     "kuzu>=0.9.0",
     "matplotlib>=3.10.3",
     "minsearch>=0.0.2",
