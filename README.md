@@ -15,3 +15,9 @@ This repository follows the LLM Zoomcamp from [DataTalksClub](https://github.com
 - Vector search and embeddings
 - Indexing and retrieving data efficiently
 - Using Qdrant as the vestor database
+
+### [Module 3: RAG and LLM Evaluation](03-evaluation/)
+- Evaluating the effectiveness of retrieval components
+- Assessing the quality of LLM-generated answers
+- Metrics such as Hit Rate, MRR, Cosine Similarity, and ROUGE
+- Using Minsearch (text and vector), Qdrant, and various embedding models
